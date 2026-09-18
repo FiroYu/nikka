@@ -1,0 +1,70 @@
+[package]
+name = "app"
+version = "0.7.0"
+description = "nikka — desktop sticky todo with git sync"
+authors = ["FiroYu"]
+license = "MIT"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[features]
+# custom-protocol：直接 cargo build 出的 exe 走嵌入的前端产物（dist/），
+# 而不是 devUrl（localhost:1420）。tauri build 会自动启用。
+custom-protocol = ["tauri/custom-protocol"]
+
+[dependencies]
+# The HTTP adapter supplies an explicit Mozilla root store to both fetch and push.
+# Do not enable reqwest's platform verifier as our TLS client: Android needs no CA files/JNI.
+gix = { version = "=0.87.1", default-features = false, features = ["sha1", "blocking-http-transport-reqwest", "status", "index", "worktree-mutation", "merge", "revision"] }
+# gix 聚合 crate 不透传 pack 的 generate feature——手写 push 需要 pack 写入能力,直接依赖 gix-pack(与 gix 0.87 内部版本一致)
+gix-pack = { version = "0.74", features = ["generate"] }
+reqwest = { version = "0.13.4", default-features = false, features = ["blocking", "rustls-no-provider"] }
+rustls = { version = "0.23", default-features = false, features = ["std", "ring", "tls12"] }
+webpki-roots = "1"
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = { version = "0.4", default-features = false, features = ["std", "clock"] }
+# log 门面全平台可用（host 无后端时宏为 no-op）；android_logger 仅在安卓注入后端
+log = "0.4"
+
+[target.'cfg(target_os = "android")'.dependencies]
+android_logger = "0.15"
+
+[dev-dependencies]
+tempfile = "3"
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-global-shortcut = "2"
+# 同机单实例：二次启动聚焦既有窗口后立即退出（2026-09-16 需求）
+tauri-plugin-single-instance = "2"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.60", features = [
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_HiDpi",
+    "Win32_Foundation",
+    "Win32_Storage_FileSystem",
+    "Win32_Graphics_Gdi",
+] }
+
+
+# Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true

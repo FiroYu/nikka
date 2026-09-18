@@ -1,0 +1,36 @@
+name: Windows checks and build
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: windows-rust-${{ hashFiles('src-tauri/Cargo.lock') }}
+      - run: npm ci
+      - run: npm run build
+      - run: cargo test --manifest-path src-tauri/Cargo.toml
+      - run: cargo clippy --manifest-path src-tauri/Cargo.toml -- -D warnings
+      - run: npm run tauri -- build --bundles nsis
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nikka-windows
+          path: |
+            src-tauri/target/release/app.exe
+            src-tauri/target/release/bundle/nsis/*-setup.exe
+          if-no-files-found: error

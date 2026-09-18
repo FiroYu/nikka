@@ -1,0 +1,26 @@
+{
+  "name": "nikka",
+  "private": true,
+  "version": "0.7.0",
+  "description": "日課 — Windows desktop sticky todo with git sync",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FiroYu/nikka.git"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "vite": "^8.0.16",
+    "typescript": "~6.0.3"
+  }
+}

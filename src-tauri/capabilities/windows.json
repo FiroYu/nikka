@@ -1,0 +1,10 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "windows-close",
+  "description": "桌面窗口关闭权限（仅 Windows；安卓无窗口关闭语义）",
+  "windows": ["sticky"],
+  "platforms": ["windows"],
+  "permissions": [
+    "core:window:allow-close"
+  ]
+}

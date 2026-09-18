@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>日課</title>
+    <script type="module" src="/src/main.ts" defer></script>
+    <script type="module" src="/src/themes.ts"></script>
+  </head>
+
+  <body>
+    <main id="sticky" class="sticky" aria-label="日課">
+      <header class="mast" data-tauri-drag-region>
+        <button class="day-nav" id="nav-prev" data-action="day-prev" title="前一天" hidden>‹</button>
+        <button class="mast-date" id="mast-date" data-action="pick-date" type="button" title="点日期可跳选任意日期">
+          <small id="head-weekday">—</small>
+          <span id="head-date">--.--</span>
+        </button>
+        <button class="day-nav" id="nav-next" data-action="day-next" title="后一天" hidden>›</button>
+        <button class="today-chip" id="head-today" data-action="day-today" title="回到今天" hidden>回今天</button>
+        <div class="mast-right">
+        <div class="notebook-nav">
+          <button id="notebook-toggle" type="button" aria-expanded="false" aria-controls="notebook-panel" title="切换笔记本">
+            <span id="notebook-label">笔记本</span><span class="notebook-chevron" aria-hidden="true">⌄</span>
+          </button>
+          <div id="notebook-panel" hidden>
+            <div id="notebook-list" role="group" aria-label="选择笔记本"></div>
+            <div class="notebook-actions"><button id="notebook-create" type="button">＋ 新建笔记本</button><button id="notebook-rename" type="button">重命名</button></div>
+            <form id="notebook-form" hidden>
+              <label id="notebook-form-label" for="notebook-name">新建笔记本</label>
+              <input id="notebook-name" required maxlength="40" autocomplete="off" placeholder="例如：独立项目、个人" />
+              <div class="notebook-actions"><button type="submit">保存</button><button type="button" id="notebook-cancel">取消</button></div>
+              <p id="notebook-error" role="alert" hidden></p>
+            </form>
+          </div>
+        </div>
+        <div class="mast-iso" id="head-iso" data-tauri-drag-region></div>
+        <button class="win-close" id="win-close" type="button" title="关闭" aria-label="关闭应用" hidden>✕</button>
+        </div>
+      </header>
+      <input type="date" id="date-pick" hidden aria-label="选择日期" />
+
+      <nav class="tabs" role="tablist" aria-label="视图切换">
+        <button class="tab" id="tab-day" role="tab" data-kind="day" aria-label="日事项">日</button>
+        <button class="tab" id="tab-week" role="tab" data-kind="week" aria-label="周事项">周</button>
+      </nav>
+
+      <div id="stats" class="stats" hidden></div>
+      <div id="carry" class="carry" hidden></div>
+      <div id="overdue-sum" class="overdue-sum" hidden></div>
+      <div id="groups"></div>
+      <div id="add-slot"></div>
+      <div id="note-square"><textarea aria-label="速记" placeholder="写点什么~"></textarea><span id="note-square-status" role="status"></span></div>
+
+      <div id="undo" class="undo" hidden></div>
+      <div id="ctx" class="ctx" hidden></div>
+
+      <div class="footer-area">
+        <div class="notes-nav">
+          <button id="notes-toggle" type="button" aria-expanded="false"
+            aria-controls="notes-panel" title="随日速记">速记</button>
+          <div id="notes-panel" hidden aria-labelledby="notes-title">
+            <div class="notes-heading"><span id="notes-title">速记</span><button id="notes-close" type="button" aria-controls="notes-panel">收起</button></div>
+            <div id="notes-body"></div>
+            <p id="notes-status" role="status"></p>
+          </div>
+        </div>
+        <details class="appearance" id="appearance">
+          <summary title="外观" aria-label="外观设置">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.4" />
+              <path d="M10 3a7 7 0 0 0 0 14V3Z" fill="currentColor" />
+            </svg>
+          </summary>
+          <div class="theme-panel">
+            <p class="theme-heading">外观 <span id="theme-name">极简黑标</span></p>
+            <div class="theme-options" id="theme-options" role="group" aria-label="笔记本皮肤与配色"></div>
+            <p id="theme-status" role="status">仅保存在这台设备</p>
+          </div>
+        </details>
+        <button type="button" class="foot" data-action="sync" title="点击立即同步">
+        <span class="foot-left">
+          <span class="dot" id="sync-dot" data-state="idle" aria-hidden="true"></span>
+          <span id="sync-text">…</span>
+        </span>
+        <span id="sync-tag" hidden>sticky</span>
+        </button>
+      </div>
+    </main>
+  </body>
+</html>
