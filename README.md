@@ -24,7 +24,7 @@ Windows 桌面常驻待办贴纸：小窗口贴在桌面一角，日 / 周视图
 
 | 文件 | 说明 |
 | --- | --- |
-| `日課_0.7.0_x64-setup.exe` | NSIS 安装包（推荐） |
+| `nikka-0.7.0-x64-setup.exe` | NSIS 安装包（推荐） |
 | `nikka-0.7.0-x64-portable.exe` | 便携版，下载后直接运行 |
 
 依赖 WebView2（Windows 11 自带；Windows 10 缺失时安装包会自动处理）。
